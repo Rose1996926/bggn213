@@ -1,0 +1,79 @@
+---
+title: "class13"
+author: "Rose Li"
+date: "5/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Ensemble 1000 genome data 
+
+Q5: What proportion of the Mexican Ancestry in Los Angeles sample population (MXL)
+are homozygous for the asthma associated SNP (G|G)?
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv", header = TRUE)
+head(mxl)
+```
+
+```{r}
+table(mxl$Genotype..forward.strand.)
+```
+
+```{r}
+# proportion
+table(mxl$Genotype..forward.strand.)/nrow(mxl)
+```
+
+```{r}
+library(seqinr)
+library(gtools)
+phred <- asc(s2c("DDDDCDEDCDDDDBBDDDCC@"))-33
+phred
+```
+
+Section4: Population Scale Analysis 
+
+```{r}
+expr <- read.table("rs8067378_ENSG00000172057.6.txt", header = TRUE)
+head(expr)
+```
+
+
+```{r}
+summary(expr)
+```
+
+```{r}
+summary(expr)
+```
+
+```{r}
+inds <- (expr$geno == "G/G")
+head(expr[inds,])
+summary(expr[inds, ]$exp)
+```
+
+```{r}
+inds2 <- (expr$geno == "A/A")
+summary(expr[inds2, ]$exp)
+```
+
+```{r}
+inds3 <- (expr$geno == "A/G")
+summary(expr[inds3, ]$exp)
+```
+
+```{r}
+hist(expr[inds, ]$exp)
+```
+
+First try a boxplot to show this data
+```{r}
+#y ~ grp
+boxplot(exp ~ geno, data=expr, notch=TRUE)
+```
+class
