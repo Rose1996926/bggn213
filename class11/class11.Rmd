@@ -1,0 +1,192 @@
+---
+title: "Class 11: Structural Bioinformatics (Part 1)"
+author: "Rose Li"
+date: "5/8/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Revisit PDB
+
+> Q1: Download a CSV file from the PDB site (accessible from “Analyze” -> “PDB Statistics” >
+“by Experimental Method and Molecular Type”. Move this CSV file into your RStudio project
+and determine the percentage of structures solved by X-Ray and Electron Microscopy. Also can
+you determine what proportion of structures are protein? Aim to have a rendered GitHub
+document with working code that yields your answers
+
+Downloaded a CSV file from: http://www.rcsb.org/stats/summary on 2019-05-08
+
+```{r}
+db <- read.csv("Data Export Summary.csv", row.names = 1)
+head(db)
+```
+
+```{r}
+sum(db$Total)
+
+```
+
+```{r}
+rowSums(db[,1:4])
+```
+
+```{r}
+(db$Total/sum(db$Total))*100
+```
+
+What percentage are protrein? 
+```{r}
+(sum(db$Proteins)/sum(db$Total))*100
+```
+
+## Section3: Using Bio3D
+
+Let's read the PDB file we downloaded into R to see how thing live in this place
+
+```{r}
+library(bio3d)
+```
+
+
+```{r}
+pdb <- read.pdb("1hsg.pdb")
+summary(pdb)
+```
+
+```{r}
+aa321(pdb$seqres)
+```
+
+```{r}
+head(pdb$atom)
+```
+
+
+## Section4: Atom Selection 
+
+
+Let's select residue 1
+```{r}
+inds <- atom.select(pdb, resno = 10)
+inds
+```
+
+```{r}
+atom.select(pdb, resno=10, value = TRUE)
+```
+
+
+```{r}
+# Select all C-alpha atoms (return their indices)
+ca.inds <- atom.select(pdb, "calpha")
+ca.inds
+```
+
+
+## Make a protein only and ligand only pdb file 
+Here we need to select our protein with `atom.select()` then use `write.pdb()`
+
+select protein only pdb file
+```{r}
+prot <- atom.select(pdb, "protein", value=TRUE)
+prot
+```
+
+```{r}
+write.pdb(prot, file="1hsg_protein.pdb")
+```
+
+
+select ligand/drug 
+```{r}
+lig <- atom.select(pdb, "ligand", value = TRUE)
+lig
+```
+
+
+```{r}
+write.pdb(lig, file="1hsg_ligand.pdb")
+```
+
+#```{r}
+#library("bio3d.view")
+
+#view(prot)
+#```
+
+## Section6: Working with multiple PDB files
+
+```{r}
+library(bio3d)
+```
+
+```{r}
+# Extract and align the chains we are interested in
+pdbs <- pdbaln(files, fit = TRUE)
+```
+
+```{r}
+summary(pdbs)
+```
+
+
+```{r}
+View(pdbs)
+```
+
+```{r}
+pdbs$ali[1:5, 1:8]
+```
+
+```{r}
+pdbs$resno[1:5, 1:8]
+```
+
+```{r}
+seqidentity(pdbs)
+```
+
+```{r}
+rmsd(pdbs)
+```
+
+```{r}
+# Calculate RMSD
+rd <- rmsd(pdbs)
+
+# Clustering
+hc <- hclust(as.dist(rd))
+grps <- cutree(hc, k=3)
+# Plot results as dendrogram
+hclustplot(hc, k=3)
+```
+
+```{r}
+# Perform PCA
+pc.xray <- pca(pdbs)
+# Plot our results summary (PCA score plot and scree-plot)
+plot(pc.xray)
+```
+
+
+```{r}
+# Visualize first principal component
+pc1 <- mktrj(pc.xray, pc=1, file="pc_1.pdb")
+```
+
+```{r}
+library(bio3d)
+library(bio3d.view)
+# Structural displacements captured by PC1
+view(pc1)
+# The rglwidget() function from the rgl
+# package will show output in your Rmd
+# notebook and rendered html_output
+# documents
+library(rgl)
+rglwidget(pc1)
+```
+

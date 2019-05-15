@@ -6,4 +6,8 @@ I will add my class content here soon...
 
 I will start with class-5 onward 
 How about that?
+<<<<<<< HEAD
 ucsd 
+=======
+sdsu
+>>>>>>> 903a1dfeb69dcd599123085a50661f9e9d024050

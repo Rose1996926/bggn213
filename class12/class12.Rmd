@@ -1,0 +1,77 @@
+---
+title: "Class12: Structural Bioinformatics (Pt2)"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Obtain and prepare out structure for 'docking'
+
+Here we download the HIV-Pr structure from the PDB database and extract out the protein and ligand portions to seperate new PDB format files 
+
+```{r}
+library(bio3d)
+
+file <- get.pdb("1hsg")
+pdb <- read.pdb(file)
+pdb
+```
+
+```{r}
+#Select protein only 
+prot <- atom.select(pdb, "protein", value=TRUE)
+prot
+write.pdb(prot, file="1hsg_protein.pdb")
+```
+
+```{r}
+lig <- atom.select(pdb, "ligand", value=TRUE)
+lig
+write.pdb(lig, file="1hsg_ligand.pdb")
+```
+
+## Add Hydrogens and charges in ADT
+
+we opened our protein only PDB file in AutoDocTools and added hydropgen and atom-types needed for docking calculations.
+
+## Run dockings (Docking indinavir into HIV-1 protease)
+
+we will use AutoDoc Vina here at the UNIX command line! 
+The command to use was:
+
+'Downloads/autodock_vina_1_1_2_mac/bin/vina --config config.txt --log log.txt'
+
+## Inspect the docking results 
+
+## Process results back in R 
+
+```{r}
+#res <- read.pdb("all.pdbqt", multi = TRUE)
+#res
+```
+
+```{r}
+#write.pdb(res, file="results.pdb")
+```
+
+## Compare our docking poses to the MERK drug structure 
+
+```{r}
+#ori <- read.pdb("ligand.pdbqt")
+#rmsd(ori, res)
+```
+
+## Normal Mode Analysis (NMA) in Bio3d example 
+
+```{r}
+pdb <- read.pdb("1hel")
+modes <- nma(pdb)
+m7 <- mktrj(modes, mode=7, file="mode_7.pdb")
+```
+
+```{r}
+plot(modes)
+```
+
