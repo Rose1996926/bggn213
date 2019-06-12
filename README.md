@@ -14,7 +14,7 @@ I will add my class content here soon...
 
 [Class 9]
 
-[Class 10]
+[Class 10]()
 
 [Class 11](class11/class11.html)
 
