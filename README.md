@@ -14,8 +14,6 @@ I will add my class content here soon...
 
 [Class 9](class09.html)
 
-[Class 10]
-
 [Class 11](class11/class11.html)
 
 [Class 12](class12_new.html)
