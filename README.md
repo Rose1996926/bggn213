@@ -8,11 +8,11 @@ I will add my class content here soon...
 
 [Class 6](class06%20copy/class06.html)
 
-[Class 7](class07 copy/class07.html)
+[Class 7](class07.html)
 
-[Class 8](class08 copy/class08.html)
+[Class 8](class08.html)
 
-[Class 9]
+[Class 9](class09.html)
 
 [Class 10]()
 
@@ -22,5 +22,5 @@ I will add my class content here soon...
 
 [Class 13](class13_new/class13.html)
 
-[Class 14]
+[Class 14](class14/class14.html)
 
